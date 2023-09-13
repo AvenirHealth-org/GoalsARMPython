@@ -84,6 +84,54 @@ def plot_fit_hiv(hivsim, hivdat, tiffname):
          + plotnine.theme(axis_text_x = plotnine.element_text(angle=90)))
     p.save(filename=tiffname, dpi=600, units="in", width=16, height=9, pil_kwargs={"compression" : "tiff_lzw"})
 
+def test_mixing_weight(hivsim,file,year_final):
+    pop_prefs_all = pd.read_csv(file,header = None)
+    for iter in range(62):  
+        #print(iter)
+        pop_prefs = pop_prefs_all.iloc[iter]
+        
+        pop_prefs =  pop_prefs.to_numpy()
+        pop_prefs =  np.reshape(pop_prefs, (-1, 2))
+
+        hivsim.pop_assort[:] = hivsim.calc_pop_assort(pop_prefs)
+
+        ## TODO: could skip invalidation if only ANC likelihood parameters are being varied
+        hivsim.invalidate(-1) # needed so that Goals will recalculate the projection
+        hivsim.project(year_final)
+
+        ## Save and output infections and prevalence before full calibration
+        new_infections = np.sum(hivsim.new_infections, axis=(2))[:,:,7]
+        dt = pd.DataFrame(new_infections, columns = ['female','male','male_c'])
+        dt['pop']='POP_TGW'
+        new_col = range(1970,year_final+1)
+        dt['year'] = new_col
+
+
+        for i in range(7):
+            new_infections = np.sum(hivsim.new_infections, axis=(2))[:,:,i]
+
+            df2 = pd.DataFrame(new_infections, columns = ['female','male','male_c'])
+            df2['year'] = new_col
+            df2['iter'] = iter
+            if i == 0:
+                df2['pop']= 'POP_NOSEX'
+            if i == 1:
+                df2['pop']=  'POP_NEVER'
+            if i == 2:
+                df2['pop']=  'POP_UNION'
+            if i == 3:
+                df2['pop']= 'POP_SPLIT'
+            if i == 4:
+                df2['pop']=  'POP_PWID'
+            if i == 5:
+                df2['pop']=  'POP_FSW_CFSW'
+            if i == 6:
+                df2['pop']=  'POP_MSM'
+            dt = pd.concat([dt, df2])
+        
+        name_out = "C:\Proj\Repositories\GoalsARMPython\outputs\sensitivity\mixing_weights\infections_" + str(iter) + ".csv"
+        dt.to_csv(name_out, index=False)
+
 # wrappers around scipy stats log densities that can be used
 # in standard ways
 def wrap_beta(x, shape1, shape2):
@@ -252,6 +300,8 @@ class GoalsFitter:
                                                                      self.hivsim.partner_age_params,
                                                                      self.hivsim.partner_pop_ratios)
         
+       
+
         frr_age = self.hivsim.hiv_frr['age'] * self.hivsim.hiv_frr['laf']
         frr_cd4 = self.hivsim.hiv_frr['cd4']
         frr_art = self.hivsim.hiv_frr['art'] * self.hivsim.hiv_frr['laf']
@@ -262,10 +312,12 @@ class GoalsFitter:
                                     self.hivsim.likelihood_par[CONST.LHOOD_VARINFL_SITE],
                                     self.hivsim.likelihood_par[CONST.LHOOD_VARINFL_CENSUS])
         
-        ## TODO: could skip invalidation if only ANC likelihood parameters are being varied
+         ## TODO: could skip invalidation if only ANC likelihood parameters are being varied
         self.hivsim.invalidate(-1) # needed so that Goals will recalculate the projection
         self.hivsim.project(self.year_final)
-
+        
+        test_mixing_weight(self.hivsim, "C:\Proj\Repositories\GoalsARMPython\inputs\mixing_weight_sensitivity.csv",self.year_final)
+            
     def calibrate(self, method='Nelder-Mead'):
         """! Calibrate the model to ANC and HIV prevalence data
         @param method see scipy.optimize.minimize. Only methods that allow bounds can be used.
@@ -286,6 +338,9 @@ class GoalsFitter:
 def main(par_file, anc_file, hiv_file):
     Fitter = GoalsFitter(par_file, anc_file, hiv_file)
     pars, diag = Fitter.calibrate(method='Nelder-Mead')
+
+    ## Use only if testing mixing weights - no need to recalibrate the whole model
+   
 
     ## TODO: The outro below violates encapsuation by accessing "private"
     ## data in _ancdat and _hivdat (drop "_", or move the plot methods into

@@ -24,10 +24,11 @@ def main(xlsx_name):
     t2 = time.time()
     model.project(2030)
     t3 = time.time()
-
+ 
+    
     results = Results(model)
     pop = results.bigpop()
-    
+   
     pop_frame = array2frame(pop, ['Year', 'Sex', 'Age'])
     birth_frame = array2frame(model.births, ['Year', 'Sex'])
     pop_child_neg = array2frame(model.pop_child_neg, ['Year', 'Sex', 'Age'])
@@ -52,5 +53,5 @@ def main(xlsx_name):
 
 if __name__ == "__main__":
     sys.stderr.write("Process %d\n" % (os.getpid()))
-    xlsx_name = "inputs\\example-inputs.xlsx"
+    xlsx_name = "inputs\\mwi-2023-inputs.xlsx"
     main(xlsx_name)
