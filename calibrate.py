@@ -132,6 +132,52 @@ def test_mixing_weight(hivsim,file,year_final):
         name_out = "C:\Proj\Repositories\GoalsARMPython\outputs\sensitivity\mixing_weights\infections_" + str(iter) + ".csv"
         dt.to_csv(name_out, index=False)
 
+def test_same_sex_var(hivsim,file,year_final):
+    age_prefs_all = pd.read_csv(file,header = None)
+    for iter in range(15):  
+        
+        age_prefs = age_prefs_all.iloc[iter]
+        age_prefs = np.array(age_prefs, dtype=np.float64, order="C")
+        age_prefs = age_prefs.reshape((3,1))
+        
+        hivsim.age_mixing[:] = hivsim.calc_partner_prefs(age_prefs)
+        
+        hivsim.invalidate(-1) # needed so that Goals will recalculate the projection
+        hivsim.project(year_final)
+
+        ## Save and output infections and prevalence before full calibration
+        new_infections = np.sum(hivsim.new_infections, axis=(2))[:,:,7]
+        dt = pd.DataFrame(new_infections, columns = ['female','male','male_c'])
+        dt['pop']='POP_TGW'
+        new_col = range(1970,year_final+1)
+        dt['year'] = new_col
+
+
+        for i in range(7):
+            new_infections = np.sum(hivsim.new_infections, axis=(2))[:,:,i]
+
+            df2 = pd.DataFrame(new_infections, columns = ['female','male','male_c'])
+            df2['year'] = new_col
+            df2['iter'] = iter
+            if i == 0:
+                df2['pop']= 'POP_NOSEX'
+            if i == 1:
+                df2['pop']=  'POP_NEVER'
+            if i == 2:
+                df2['pop']=  'POP_UNION'
+            if i == 3:
+                df2['pop']= 'POP_SPLIT'
+            if i == 4:
+                df2['pop']=  'POP_PWID'
+            if i == 5:
+                df2['pop']=  'POP_FSW_CFSW'
+            if i == 6:
+                df2['pop']=  'POP_MSM'
+            dt = pd.concat([dt, df2])
+        
+        name_out = "C:\Proj\Repositories\GoalsARMPython\outputs\sensitivity\same_sex_var\infections_" + str(iter) + ".csv"
+        dt.to_csv(name_out, index=False)
+        
 # wrappers around scipy stats log densities that can be used
 # in standard ways
 def wrap_beta(x, shape1, shape2):
@@ -300,7 +346,7 @@ class GoalsFitter:
                                                                      self.hivsim.partner_age_params,
                                                                      self.hivsim.partner_pop_ratios)
         
-       
+                
 
         frr_age = self.hivsim.hiv_frr['age'] * self.hivsim.hiv_frr['laf']
         frr_cd4 = self.hivsim.hiv_frr['cd4']
@@ -312,10 +358,11 @@ class GoalsFitter:
                                     self.hivsim.likelihood_par[CONST.LHOOD_VARINFL_SITE],
                                     self.hivsim.likelihood_par[CONST.LHOOD_VARINFL_CENSUS])
         
-         ## TODO: could skip invalidation if only ANC likelihood parameters are being varied
+        ## TODO: could skip invalidation if only ANC likelihood parameters are being varied
         self.hivsim.invalidate(-1) # needed so that Goals will recalculate the projection
         self.hivsim.project(self.year_final)
-        
+
+        test_same_sex_var(self.hivsim, "C:\Proj\Repositories\GoalsARMPython\inputs\same_sex_var_sensitivity.csv",self.year_final)
         test_mixing_weight(self.hivsim, "C:\Proj\Repositories\GoalsARMPython\inputs\mixing_weight_sensitivity.csv",self.year_final)
             
     def calibrate(self, method='Nelder-Mead'):
