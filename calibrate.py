@@ -176,7 +176,99 @@ def test_same_sex_var(hivsim,file,year_final):
         
         name_out = "C:\Proj\Repositories\GoalsARMPython\outputs\sensitivity\same_sex_var\infections_" + str(iter) + ".csv"
         dt.to_csv(name_out, index=False)
+
+def test_num_partners(hivsim,file,year_final):  
+    pop_ratios_all = pd.read_csv(file,header = None)
+    for iter in range(33):  
+        pop_ratios = pop_ratios_all.iloc[iter]
+        pop_ratios =  pop_ratios.to_numpy()
+        pop_ratios = np.append(pop_ratios,np.nan)
+        pop_ratios =  np.reshape(pop_ratios, (7,2))
+     
+        hivsim.partner_pop_ratios = pop_ratios
+        hivsim.partner_rate[:] = hivsim.calc_partner_rates(hivsim.partner_time_trend,
+                                                            hivsim.partner_age_params,
+                                                            hivsim.partner_pop_ratios)
+
+        hivsim.invalidate(-1) # needed so that Goals will recalculate the projection
+        hivsim.project(year_final)
+         
+          ## Save and output infections and prevalence before full calibration
+        new_infections = np.sum(hivsim.new_infections, axis=(2))[:,:,7]
+        dt = pd.DataFrame(new_infections, columns = ['female','male','male_c'])
+        dt['pop']='POP_TGW'
+        new_col = range(1970,year_final+1)
+        dt['year'] = new_col
+
+        for i in range(7):
+            new_infections = np.sum(hivsim.new_infections, axis=(2))[:,:,i]
+
+            df2 = pd.DataFrame(new_infections, columns = ['female','male','male_c'])
+            df2['year'] = new_col
+            df2['iter'] = iter
+            if i == 0:
+                df2['pop']= 'POP_NOSEX'
+            if i == 1:
+                df2['pop']=  'POP_NEVER'
+            if i == 2:
+                df2['pop']=  'POP_UNION'
+            if i == 3:
+                df2['pop']= 'POP_SPLIT'
+            if i == 4:
+                df2['pop']=  'POP_PWID'
+            if i == 5:
+                df2['pop']=  'POP_FSW_CFSW'
+            if i == 6:
+                df2['pop']=  'POP_MSM'
+            dt = pd.concat([dt, df2])
         
+        name_out = "C:\Proj\Repositories\GoalsARMPython\outputs\sensitivity\\num_partners\infections_" + str(iter) + ".csv"
+        dt.to_csv(name_out, index=False)
+
+def test_dur_marriage(hivsim,file,year_final):
+    avg_dur_all = pd.read_csv(file,header = None)
+    for iter in range(16):  
+        #print(iter)
+            avg_dur = avg_dur_all.iloc[iter]
+                
+            hivsim.avg_dur_union = avg_dur
+            hivsim._initialize_population_sizes(hivsim.med_age_debut, hivsim.med_age_union, hivsim.avg_dur_union, hivsim.kp_size, hivsim.kp_stay, hivsim.kp_turnover)
+        
+            hivsim.invalidate(-1) # needed so that Goals will recalculate the projection
+            hivsim.project(self.year_final)
+
+             ## Save and output infections and prevalence before full calibration
+            new_infections = np.sum(hivsim.new_infections, axis=(2))[:,:,7]
+            dt = pd.DataFrame(new_infections, columns = ['female','male','male_c'])
+            dt['pop']='POP_TGW'
+            new_col = range(1970,year_final+1)
+            dt['year'] = new_col
+
+            for i in range(7):
+                new_infections = np.sum(hivsim.new_infections, axis=(2))[:,:,i]
+
+                df2 = pd.DataFrame(new_infections, columns = ['female','male','male_c'])
+                df2['year'] = new_col
+                df2['iter'] = iter
+                if i == 0:
+                    df2['pop']= 'POP_NOSEX'
+                if i == 1:
+                    df2['pop']=  'POP_NEVER'
+                if i == 2:
+                    df2['pop']=  'POP_UNION'
+                if i == 3:
+                    df2['pop']= 'POP_SPLIT'
+                if i == 4:
+                    df2['pop']=  'POP_PWID'
+                if i == 5:
+                    df2['pop']=  'POP_FSW_CFSW'
+                if i == 6:
+                    df2['pop']=  'POP_MSM'
+                dt = pd.concat([dt, df2])
+            
+            name_out = "C:\Proj\Repositories\GoalsARMPython\outputs\sensitivity\\dur_marriage\infections_" + str(iter) + ".csv"
+            dt.to_csv(name_out, index=False)
+
 # wrappers around scipy stats log densities that can be used
 # in standard ways
 def wrap_beta(x, shape1, shape2):
@@ -355,21 +447,19 @@ class GoalsFitter:
                                     self.hivsim.likelihood_par[CONST.LHOOD_VARINFL_SITE],
                                     self.hivsim.likelihood_par[CONST.LHOOD_VARINFL_CENSUS])
     
-
-        pop_ratios_all = pd.read_csv("C:\Proj\Repositories\GoalsARMPython\inputs\\num_partners_sensitivity.csv",header = None)
-        for iter in range(33):  
+        
+       
+        sex_acts_all = pd.read_csv("C:\Proj\Repositories\GoalsARMPython\inputs\sex_acts_sensitivity.csv",header = None)
+                                     
+        for iter in range(6):  
         #print(iter)
-            pop_ratios = pop_ratios_all.iloc[iter]
-            pop_ratios =  pop_ratios.to_numpy()
-            pop_ratios = np.append(pop_ratios,np.nan)
-            pop_ratios =  np.reshape(pop_ratios, (7,2))
-     
-            self.hivsim.partner_pop_ratios = pop_ratios
-            print(self.hivsim.partner_pop_ratios)
-            self.hivsim.partner_rate[:] = self.hivsim.calc_partner_rates(self.hivsim.partner_time_trend,
-                                                                        self.hivsim.partner_age_params,
-                                                                        self.hivsim.partner_pop_ratios)
-
+            sex_acts = sex_acts_all.iloc[iter]
+            sex_acts = sex_acts.to_numpy(dtype = "float64")
+            print(self.hivsim.sex_acts)
+             
+            self.hivsim.sex_acts[:] = sex_acts
+            print(self.hivsim.sex_acts)
+            self.hivsim._proj.init_sex_acts(self.hivsim.sex_acts)
         
             ## TODO: could skip invalidation if only ANC likelihood parameters are being varied
             self.hivsim.invalidate(-1) # needed so that Goals will recalculate the projection
@@ -405,9 +495,11 @@ class GoalsFitter:
                     df2['pop']=  'POP_MSM'
                 dt = pd.concat([dt, df2])
             
-            name_out = "C:\Proj\Repositories\GoalsARMPython\outputs\sensitivity\\num_partners\infections_" + str(iter) + ".csv"
+            name_out = "C:\Proj\Repositories\GoalsARMPython\outputs\sensitivity\\sex_acts\infections_" + str(iter) + ".csv"
             dt.to_csv(name_out, index=False)
-
+        
+        test_dur_marriage(self.hivsim, "C:\Proj\Repositories\GoalsARMPython\inputs\dur_marriage_sensitivity.csv", self.year_final)
+        test_num_partners(self.hivsim, "C:\Proj\Repositories\GoalsARMPython\inputs\\num_partners_sensitivity.csv", self.year_final)
         test_same_sex_var(self.hivsim, "C:\Proj\Repositories\GoalsARMPython\inputs\same_sex_var_sensitivity.csv",self.year_final)
         test_mixing_weight(self.hivsim, "C:\Proj\Repositories\GoalsARMPython\inputs\mixing_weight_sensitivity.csv",self.year_final)
             
