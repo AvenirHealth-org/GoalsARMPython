@@ -152,7 +152,6 @@ def test_same_sex_var(hivsim,file,year_final):
         new_col = range(1970,year_final+1)
         dt['year'] = new_col
 
-
         for i in range(7):
             new_infections = np.sum(hivsim.new_infections, axis=(2))[:,:,i]
 
@@ -346,8 +345,6 @@ class GoalsFitter:
                                                                      self.hivsim.partner_age_params,
                                                                      self.hivsim.partner_pop_ratios)
         
-                
-
         frr_age = self.hivsim.hiv_frr['age'] * self.hivsim.hiv_frr['laf']
         frr_cd4 = self.hivsim.hiv_frr['cd4']
         frr_art = self.hivsim.hiv_frr['art'] * self.hivsim.hiv_frr['laf']
@@ -357,10 +354,59 @@ class GoalsFitter:
                                     self.hivsim.likelihood_par[CONST.LHOOD_ANCRT_BIAS],
                                     self.hivsim.likelihood_par[CONST.LHOOD_VARINFL_SITE],
                                     self.hivsim.likelihood_par[CONST.LHOOD_VARINFL_CENSUS])
+    
+
+        pop_ratios_all = pd.read_csv("C:\Proj\Repositories\GoalsARMPython\inputs\\num_partners_sensitivity.csv",header = None)
+        for iter in range(33):  
+        #print(iter)
+            pop_ratios = pop_ratios_all.iloc[iter]
+            pop_ratios =  pop_ratios.to_numpy()
+            pop_ratios = np.append(pop_ratios,np.nan)
+            pop_ratios =  np.reshape(pop_ratios, (7,2))
+     
+            self.hivsim.partner_pop_ratios = pop_ratios
+            print(self.hivsim.partner_pop_ratios)
+            self.hivsim.partner_rate[:] = self.hivsim.calc_partner_rates(self.hivsim.partner_time_trend,
+                                                                        self.hivsim.partner_age_params,
+                                                                        self.hivsim.partner_pop_ratios)
+
         
-        ## TODO: could skip invalidation if only ANC likelihood parameters are being varied
-        self.hivsim.invalidate(-1) # needed so that Goals will recalculate the projection
-        self.hivsim.project(self.year_final)
+            ## TODO: could skip invalidation if only ANC likelihood parameters are being varied
+            self.hivsim.invalidate(-1) # needed so that Goals will recalculate the projection
+            self.hivsim.project(self.year_final)
+
+             ## Save and output infections and prevalence before full calibration
+            new_infections = np.sum(self.hivsim.new_infections, axis=(2))[:,:,7]
+            dt = pd.DataFrame(new_infections, columns = ['female','male','male_c'])
+            dt['pop']='POP_TGW'
+            new_col = range(1970,self.year_final+1)
+            dt['year'] = new_col
+
+
+            for i in range(7):
+                new_infections = np.sum(self.hivsim.new_infections, axis=(2))[:,:,i]
+
+                df2 = pd.DataFrame(new_infections, columns = ['female','male','male_c'])
+                df2['year'] = new_col
+                df2['iter'] = iter
+                if i == 0:
+                    df2['pop']= 'POP_NOSEX'
+                if i == 1:
+                    df2['pop']=  'POP_NEVER'
+                if i == 2:
+                    df2['pop']=  'POP_UNION'
+                if i == 3:
+                    df2['pop']= 'POP_SPLIT'
+                if i == 4:
+                    df2['pop']=  'POP_PWID'
+                if i == 5:
+                    df2['pop']=  'POP_FSW_CFSW'
+                if i == 6:
+                    df2['pop']=  'POP_MSM'
+                dt = pd.concat([dt, df2])
+            
+            name_out = "C:\Proj\Repositories\GoalsARMPython\outputs\sensitivity\\num_partners\infections_" + str(iter) + ".csv"
+            dt.to_csv(name_out, index=False)
 
         test_same_sex_var(self.hivsim, "C:\Proj\Repositories\GoalsARMPython\inputs\same_sex_var_sensitivity.csv",self.year_final)
         test_mixing_weight(self.hivsim, "C:\Proj\Repositories\GoalsARMPython\inputs\mixing_weight_sensitivity.csv",self.year_final)
