@@ -146,6 +146,15 @@ def xlsx_load_contact_params(tab_contact):
     needle_sharing = xlsx_load_range(tab_contact, 'B18', 'CD18')
     return sex_acts.reshape((4)), condom_freq.transpose(), pwid_force_infection.transpose(), needle_sharing[0]
 
+def xlsx_load_mtct_rates(tab_mtct_rates):
+    """! Load MTCT rates options
+    @param tab_mtct_rates an openpyxl workbook tab
+    @return a dict mapping parameter tags to parameter values
+    """
+    vals = [cell[0].value for cell in tab_mtct_rates['B2:B28']]
+    keys = [cell[0].value for cell in tab_mtct_rates['D2:D28']]
+    return dict(zip(keys,vals))
+
 def xlsx_load_direct_clhiv(tab_clhiv):
     return xlsx_load_range(tab_clhiv, 'D3', 'CF86').transpose()
 

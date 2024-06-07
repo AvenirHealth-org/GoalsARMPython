@@ -14,6 +14,7 @@ XLSX_TAB_HIV_FERT     = "HIVFertilityInputs"
 XLSX_TAB_ADULT_PROG   = "HIVDiseaseInputs"
 XLSX_TAB_ADULT_ART    = "ARTAdultInputs"
 XLSX_TAB_MALE_CIRC    = "MCInputs"
+XLSX_TAB_MTCT_RATES   = "MTCTRateInputs"
 XLSX_TAB_DIRECT_CLHIV = "DirectCLHIV"
 XLSX_TAB_LIKELIHOOD   = "LikelihoodInputs"
 XLSX_TAB_FITTING      = "FittingInputs"
@@ -48,6 +49,32 @@ EPI_EFFECT_CONDOM    = "effect.condom"
 EPI_ART_MORT_WEIGHT  = "art.mort.weight"
 EPI_INITIAL_YEAR     = "seed.time"
 EPI_INITIAL_PREV     = "seed.prev"
+
+## MTCTRateInputs tab tags
+MTCT_PN_NONE_000_200  = "peri.none.lt.200"
+MTCT_PN_NONE_200_350  = "peri.none.200.350"
+MTCT_PN_NONE_GEQ_350  = "peri.none.gt.350"
+MTCT_PN_INCI          = "peri.inci"
+MTCT_PN_SDNVP         = "peri.sdnvp"
+MTCT_PN_DUAL          = "peri.dual"
+MTCT_PN_OPT_A         = "peri.opt.a"
+MTCT_PN_OPT_B         = "peri.opt.b"
+MTCT_PN_ART_BEFORE    = "peri.art.before"
+MTCT_PN_ART_DURING    = "peri.art.during"
+MTCT_PN_ART_LATE      = "peri.art.late"
+MTCT_BF_NONE_000_200  = "bf.none.lt.200"
+MTCT_BF_NONE_200_350  = "bf.none.200.350"
+MTCT_BF_NONE_GEQ_350  = "bf.none.gt.350"
+MTCT_BF_INCI          = "bf.inci"
+MTCT_BF_SDNVP_000_350 = "bf.sdnvp.lt.350"
+MTCT_BF_SDNVP_GEQ_350 = "bf.sdnvp.gt.350"
+MTCT_BF_DUAL_000_350  = "bf.dual.lt.350"
+MTCT_BF_DUAL_GEQ_350  = "bf.dual.gt.350"
+MTCT_BF_OPT_A         = "bf.opt.a"
+MTCT_BF_OPT_B         = "bf.opt.b"
+MTCT_BF_ART_BEFORE    = "bf.art.before"
+MTCT_BF_ART_DURING    = "bf.art.during"
+MTCT_BF_ART_LATE      = "bf.art.late"
 
 ## LikelihoodInputs tab tags
 LHOOD_ANCSS_BIAS     = "ancss.bias"
@@ -205,6 +232,42 @@ DTX_ART_MAX = 5
 
 N_DTX = DTX_MAX - DTX_MIN + 1
 N_ART = DTX_ART_MAX - DTX_ART_MIN + 1
+
+## +=+ MTCT constants +========================================================+
+## +-+ MTCT timing +-----------------------------------------------------------+
+MTCT_PN = 0 # perinatal
+MTCT_BF = 1 # breastfeeding
+
+MTCT_MIN = 0
+MTCT_MAX = 1
+
+N_MTCT = MTCT_MAX - MTCT_MIN + 1
+
+## +-+ MTCT regimens +---------------------------------------------------------+
+MTCT_RX_NONE       = 0 # No prophylaxis
+MTCT_RX_INCI       = 1 # Incident infection during pregnancy
+MTCT_RX_SDNVP      = 2 # Single-dose nevirapine
+MTCT_RX_DUAL       = 3 # WHO 2006 dual ARV regimens (described in doi:10.1136/sextrans-2012-050709)
+MTCT_RX_OPT_A      = 4 # Option A (described in ISBN: 978 92 4 159981 8)
+MTCT_RX_OPT_B      = 5 # Option B (described in ISBN: 978 92 4 159981 8)
+MTCT_RX_ART_BEFORE = 6 # ART initiated before current pregnancy
+MTCT_RX_ART_DURING = 7 # ART initiated during current pregnancy >=4 weeks before delivery
+MTCT_RX_ART_LATE   = 8 # ART initiated during current pregnancy <4 weeks before delivery
+
+MTCT_RX_MIN = 0
+MTCT_RX_MAX = 8
+
+N_MTCT_RX = MTCT_RX_MAX - MTCT_RX_MIN + 1
+
+## +-+ MTCT-relevant maternal CD4 categories +---------------------------------+
+MTCT_CD4_000_200 = 0 # [0,200) CD4 cells/mm3
+MTCT_CD4_200_350 = 1 # [200,350) CD4 cells/mm3
+MTCT_CD4_GEQ_350 = 2 # [350,\infty) CD4 cells/mm3
+
+MTCT_CD4_MIN = 0
+MTCT_CD4_MAX = 2
+
+N_MTCT_CD4 = MTCT_CD4_MAX - MTCT_CD4_MIN + 1
 
 ## +===+ Fitting constants +===================================================+
 DIST_LOGNORMAL = 'Lognormal'

@@ -439,7 +439,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         args = parser.parse_args()
     else:
-        args = parser.parse_args(["inputs/mwi-2023-inputs.xlsx",
+        args = parser.parse_args(["inputs/example-inputs.xlsx",
                                   "--ancprev",   "inputs/mwi-2023-anc-prev.csv",
                                   "--svyprev",   "inputs/mwi-2023-hiv-prev.csv"])
     par_file = args.input_xlsx
