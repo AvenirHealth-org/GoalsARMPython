@@ -306,6 +306,16 @@ void GoalsProj::init_hiv_fertility(array_double_t frr_age_off_art, array_double_
 		proj->dat.frr_cd4_no_art(h, frr_cd4[h]);
 }
 
+void GoalsProj::init_mtct_rates(array_double_t mtct_rates) {
+	size_t shape[] = {DP::N_MTCT, DP::N_MTCT_RX, DP::N_MTCT_CD4};
+	double* ptr_rates(prepare_array(mtct_rates, 3, shape));
+	boost::multi_array_ref rates(ptr_rates, boost::extents[shape[0]][shape[1]][shape[2]]);
+	for (int u(DP::MTCT_MIN); u <= DP::MTCT_MAX; ++u)
+		for (int r(DP::MTCT_RX_MIN); r <= DP::MTCT_RX_MAX; ++r)
+			for (int h(DP::MTCT_CD4_MIN); h <= DP::MTCT_CD4_MAX; ++h)
+				proj->dat.mtct_rate(u, r, h, rates[u][r][h]);
+}
+
 void GoalsProj::init_transmission(
 	const double transmit_f2m,
 	const double or_m2f,
