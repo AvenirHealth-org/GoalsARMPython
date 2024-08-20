@@ -194,7 +194,22 @@ class Model:
         resume from year_stop. """
         self._proj.invalidate(year)
         self._projected = min(year, self._projected)
-        
+
+    def births_hiv_exposed(self, year, females):
+        """! Calculate the number of children born to HIV+ women.
+        @param year calculation year, used just to access fertility rates.
+        @param females a 35-by-9 matrix of female population sizes. females[a,h]
+        stores the number of females by age (a=0..34 corresponds to ages 15..49)
+        and HIV state h (h=0..6 for HIV+ females in stages HIV_PRIMARY..HIV_000_050
+        and either not on ART or on ART for less than six months; h=7 for HIV+
+        females on ART, and h=8 for HIV- females).
+        @return a 35-by-8 array of births by mothers age and HIV status, excluding
+        births to HIV- females.
+        """
+        births_exposed = np.zeros((CONST.N_AGE_BIRTH, CONST.N_HIV_ADULT + 1), dtype=self._dtype, order=self._order)
+        self._proj.births_hiv_exposed(year - self.year_first, females, births_exposed)
+        return births_exposed
+    
     def _initialize_population_sizes(self, med_age_debut, med_age_union, avg_dur_union, kp_size, kp_stay, kp_turnover):
         """! Convenience function for initializing model population sizes
         """
