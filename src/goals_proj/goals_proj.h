@@ -390,6 +390,8 @@ PYBIND11_MODULE(goals_proj, m) {
 		.def("project",    &GoalsProj::project)
 		.def("invalidate", &GoalsProj::invalidate)
 
+		.def("births_hiv_exposed", &GoalsProj::calc_births_hiv_exposed)
+
 		.def("use_direct_incidence", &GoalsProj::use_direct_incidence)
 
 		;
