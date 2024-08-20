@@ -299,6 +299,26 @@ public:
 	/// FALSE if mechanistic incidence calculations should be done
 	void use_direct_incidence(const bool flag);
 
+	/// +=+ Functions exposed for unit testing +=+
+
+	/// Calculate the number of births to females living with HIV.
+	/// @param year_index The year to calculate births in (1970 is year_index=0). This
+	/// calculation can only be done for year_index > 0.
+	/// @param females input 35-by-9 array of female population counts. See "details" below.
+	/// @param births output 35-by-8 array of births event counts. See "details" below.
+	/// @details
+	/// 
+	/// females[a][h] must be filled in with the number of females by age
+	/// a (a=0..34 for ages 15..49) and HIV state h (h=0..6 for HIV+ females in
+	/// stages HIV_PRIMARY..HIV_000_050 and either not on ART or on ART for
+	/// less than six months; h=7 for HIV+ females on ART, and h=8 for HIV-
+	/// females).
+	/// 
+	/// On return, births[a][h] stores the number of births to HIV+ females by age
+	/// (a=0..34) and HIV status (h=0..7). Births to HIV-negative females (h=8)
+	/// are not calculated by this function.
+	void calc_births_hiv_exposed(const int year_index, array_double_t females, array_double_t births);
+
 private:
 	DP::Projection* proj;
 	size_t num_years;
@@ -363,9 +383,9 @@ PYBIND11_MODULE(goals_proj, m) {
 		.def("init_adult_art_interruption",   &GoalsProj::init_adult_art_interruption)
 		.def("init_adult_art_suppressed",     &GoalsProj::init_adult_art_suppressed)
 		.def("init_male_circumcision_uptake", &GoalsProj::init_male_circumcision_uptake)
-		.def("init_clhiv_agein",              &GoalsProj::init_clhiv_agein)
 		.def("init_effect_vmmc",              &GoalsProj::init_effect_vmmc)
 		.def("init_effect_condom",            &GoalsProj::init_effect_condom)
+		.def("init_clhiv_agein",              &GoalsProj::init_clhiv_agein)
 
 		.def("project",    &GoalsProj::project)
 		.def("invalidate", &GoalsProj::invalidate)

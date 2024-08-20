@@ -484,3 +484,11 @@ void GoalsProj::invalidate(const int year) {
 void GoalsProj::use_direct_incidence(const bool flag) {
 	proj->dat.direct_incidence(flag);
 }
+
+void GoalsProj::calc_births_hiv_exposed(const int year_index, array_double_t females, array_double_t births) {
+	size_t shape_females[] = {DP::N_AGE_BIRTH, DP::N_HIV_ADULT + 2};
+	size_t shape_births[] = {DP::N_AGE_BIRTH, DP::N_HIV_ADULT + 1};
+	boost::multi_array_ref<double, 2> arr_females(prepare_array(females, 2, shape_females), boost::extents[shape_females[0]][shape_females[1]]);
+	boost::multi_array_ref<double, 2> arr_births(prepare_array(births, 2, shape_births), boost::extents[shape_births[0]][shape_births[1]]);
+	proj->calc_births_hiv_exposed(year_index, arr_females, arr_births);
+}
