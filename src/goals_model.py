@@ -198,15 +198,19 @@ class Model:
     def births_hiv_exposed(self, year, females):
         """! Calculate the number of children born to HIV+ women.
         @param year calculation year, used just to access fertility rates.
-        @param females a 35-by-9 matrix of female population sizes. females[a,h]
+        @param females a 35-by-10 matrix of female population sizes. females[a,h]
         stores the number of females by age (a=0..34 corresponds to ages 15..49)
-        and HIV state h (h=0..6 for HIV+ females in stages HIV_PRIMARY..HIV_000_050
-        and either not on ART or on ART for less than six months; h=7 for HIV+
-        females on ART, and h=8 for HIV- females).
-        @return a 35-by-8 array of births by mothers age and HIV status, excluding
-        births to HIV- females.
+        and HIV state h. These stages are described in the "details" section.
+        @return a 35-by-10 matrix of births by mother's age and HIV state.
+        @details females[a,h] stores:
+        \describe{
+        \item{h=0..6}{HIV+ females in stages HIV_PRIMARY..HIV_000_050 who are not on ART, or have been on ART <6 months}
+        \item{h=7}{HIV+ females who have been on ART at least 6 months}
+        \item{h=8}{HIV- females}
+        \item{h=9}{Newly-infected females}
+        }
         """
-        births_exposed = np.zeros((CONST.N_AGE_BIRTH, CONST.N_HIV_ADULT + 1), dtype=self._dtype, order=self._order)
+        births_exposed = np.zeros((CONST.N_AGE_BIRTH, CONST.N_HIV_ADULT + 3), dtype=self._dtype, order=self._order)
         self._proj.births_hiv_exposed(year - self.year_first, females, births_exposed)
         return births_exposed
     
@@ -365,10 +369,6 @@ class Model:
     def calc_mtct_rates(self, mtct_dict):
         mtct_rates = np.zeros((CONST.N_MTCT, CONST.N_MTCT_RX, CONST.N_MTCT_CD4), dtype=self._dtype, order=self._order)
 
-        mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_NONE, CONST.MTCT_CD4_000_200] = mtct_dict[CONST.MTCT_PN_NONE_000_200]
-        mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_NONE, CONST.MTCT_CD4_200_350] = mtct_dict[CONST.MTCT_PN_NONE_200_350]
-        mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_NONE, CONST.MTCT_CD4_GEQ_350] = mtct_dict[CONST.MTCT_PN_NONE_GEQ_350]
-        mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_INCI,      :] = mtct_dict[CONST.MTCT_PN_INCI]
         mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_SDNVP,     :] = mtct_dict[CONST.MTCT_PN_SDNVP]
         mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_DUAL,      :] = mtct_dict[CONST.MTCT_PN_DUAL]
         mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_OPT_A,     :] = mtct_dict[CONST.MTCT_PN_OPT_A]
@@ -376,11 +376,14 @@ class Model:
         mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_ART_BEFORE,:] = mtct_dict[CONST.MTCT_PN_ART_BEFORE]
         mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_ART_DURING,:] = mtct_dict[CONST.MTCT_PN_ART_DURING]
         mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_ART_LATE,  :] = mtct_dict[CONST.MTCT_PN_ART_LATE]
+        mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_NONE, CONST.MTCT_CD4_000_200] = mtct_dict[CONST.MTCT_PN_NONE_000_200]
+        mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_NONE, CONST.MTCT_CD4_200_350] = mtct_dict[CONST.MTCT_PN_NONE_200_350]
+        mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_NONE, CONST.MTCT_CD4_GEQ_350] = mtct_dict[CONST.MTCT_PN_NONE_GEQ_350]
+        mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_STOP, CONST.MTCT_CD4_000_200] = mtct_dict[CONST.MTCT_PN_NONE_000_200]
+        mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_STOP, CONST.MTCT_CD4_200_350] = mtct_dict[CONST.MTCT_PN_NONE_200_350]
+        mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_STOP, CONST.MTCT_CD4_GEQ_350] = mtct_dict[CONST.MTCT_PN_NONE_GEQ_350]
+        mtct_rates[CONST.MTCT_PN, CONST.MTCT_RX_INCI,      :] = mtct_dict[CONST.MTCT_PN_INCI]
 
-        mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_NONE,  CONST.MTCT_CD4_000_200] = mtct_dict[CONST.MTCT_BF_NONE_000_200]
-        mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_NONE,  CONST.MTCT_CD4_200_350] = mtct_dict[CONST.MTCT_BF_NONE_200_350]
-        mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_NONE,  CONST.MTCT_CD4_GEQ_350] = mtct_dict[CONST.MTCT_BF_NONE_GEQ_350]
-        mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_INCI,  :] = mtct_dict[CONST.MTCT_BF_INCI]
         mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_SDNVP, CONST.MTCT_CD4_000_200] = mtct_dict[CONST.MTCT_BF_SDNVP_000_350]
         mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_SDNVP, CONST.MTCT_CD4_200_350] = mtct_dict[CONST.MTCT_BF_SDNVP_000_350]
         mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_SDNVP, CONST.MTCT_CD4_GEQ_350] = mtct_dict[CONST.MTCT_BF_SDNVP_GEQ_350]
@@ -392,5 +395,12 @@ class Model:
         mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_ART_BEFORE,:] = mtct_dict[CONST.MTCT_BF_ART_BEFORE]
         mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_ART_DURING,:] = mtct_dict[CONST.MTCT_BF_ART_DURING]
         mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_ART_LATE,  :] = mtct_dict[CONST.MTCT_BF_ART_LATE]
+        mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_NONE,  CONST.MTCT_CD4_000_200] = mtct_dict[CONST.MTCT_BF_NONE_000_200]
+        mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_NONE,  CONST.MTCT_CD4_200_350] = mtct_dict[CONST.MTCT_BF_NONE_200_350]
+        mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_NONE,  CONST.MTCT_CD4_GEQ_350] = mtct_dict[CONST.MTCT_BF_NONE_GEQ_350]
+        mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_STOP,  CONST.MTCT_CD4_000_200] = mtct_dict[CONST.MTCT_BF_NONE_000_200]
+        mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_STOP,  CONST.MTCT_CD4_200_350] = mtct_dict[CONST.MTCT_BF_NONE_200_350]
+        mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_STOP,  CONST.MTCT_CD4_GEQ_350] = mtct_dict[CONST.MTCT_BF_NONE_GEQ_350]
+        mtct_rates[CONST.MTCT_BF, CONST.MTCT_RX_INCI,  :] = mtct_dict[CONST.MTCT_BF_INCI]
 
         return 0.01 * mtct_rates # convert from % to proportion

@@ -304,19 +304,20 @@ public:
 	/// Calculate the number of births to females living with HIV.
 	/// @param year_index The year to calculate births in (1970 is year_index=0). This
 	/// calculation can only be done for year_index > 0.
-	/// @param females input 35-by-9 array of female population counts. See "details" below.
-	/// @param births output 35-by-8 array of births event counts. See "details" below.
+	/// @param females input 35-by-10 array of female population counts. See "details" below.
+	/// @param births output 35-by-10 array of births event counts. See "details" below.
 	/// @details
 	/// 
 	/// females[a][h] must be filled in with the number of females by age
-	/// a (a=0..34 for ages 15..49) and HIV state h (h=0..6 for HIV+ females in
-	/// stages HIV_PRIMARY..HIV_000_050 and either not on ART or on ART for
-	/// less than six months; h=7 for HIV+ females on ART, and h=8 for HIV-
-	/// females).
+	/// a (a=0..34 for ages 15..49) and HIV state h.
+	/// \describe{
+	/// \item{h=0..6}{HIV+ females in stages HIV_PRIMARY..HIV_000_050 who are not on ART, or have been on ART <6 months}
+	/// \item{h=7}{HIV+ females who have been on ART at least 6 months}
+	/// \item{h=8}{HIV- females}
+	/// \item{h=9}{Newly-infected females}}
 	/// 
 	/// On return, births[a][h] stores the number of births to HIV+ females by age
-	/// (a=0..34) and HIV status (h=0..7). Births to HIV-negative females (h=8)
-	/// are not calculated by this function.
+	/// (a=0..34) and HIV state.
 	void calc_births_hiv_exposed(const int year_index, array_double_t females, array_double_t births);
 
 private:
