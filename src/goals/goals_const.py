@@ -244,18 +244,19 @@ MTCT_MAX = 1
 N_MTCT = MTCT_MAX - MTCT_MIN + 1
 
 ## +-+ MTCT regimens +---------------------------------------------------------+
-MTCT_RX_NONE       = 0 # No prophylaxis
-MTCT_RX_INCI       = 1 # Incident infection during pregnancy
-MTCT_RX_SDNVP      = 2 # Single-dose nevirapine
-MTCT_RX_DUAL       = 3 # WHO 2006 dual ARV regimens (described in doi:10.1136/sextrans-2012-050709)
-MTCT_RX_OPT_A      = 4 # Option A (described in ISBN: 978 92 4 159981 8)
-MTCT_RX_OPT_B      = 5 # Option B (described in ISBN: 978 92 4 159981 8)
-MTCT_RX_ART_BEFORE = 6 # ART initiated before current pregnancy
-MTCT_RX_ART_DURING = 7 # ART initiated during current pregnancy >=4 weeks before delivery
-MTCT_RX_ART_LATE   = 8 # ART initiated during current pregnancy <4 weeks before delivery
+MTCT_RX_SDNVP      = 0 # Single-dose nevirapine
+MTCT_RX_DUAL       = 1 # WHO 2006 dual ARV regimens (described in doi:10.1136/sextrans-2012-050709)
+MTCT_RX_OPT_A      = 2 # Option A (described in ISBN: 978 92 4 159981 8)
+MTCT_RX_OPT_B      = 3 # Option B (described in ISBN: 978 92 4 159981 8)
+MTCT_RX_ART_BEFORE = 4 # ART initiated before current pregnancy
+MTCT_RX_ART_DURING = 5 # ART initiated during current pregnancy >=4 weeks before delivery
+MTCT_RX_ART_LATE   = 6 # ART initiated during current pregnancy <4 weeks before delivery
+MTCT_RX_NONE       = 7 # No prophylaxis
+MTCT_RX_STOP       = 8 # Stopped prophylaxis
+MTCT_RX_INCI       = 9 # Incident infection during pregnancy
 
 MTCT_RX_MIN = 0
-MTCT_RX_MAX = 8
+MTCT_RX_MAX = 9
 
 N_MTCT_RX = MTCT_RX_MAX - MTCT_RX_MIN + 1
 
