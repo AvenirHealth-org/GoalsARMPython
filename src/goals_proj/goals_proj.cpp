@@ -491,3 +491,16 @@ void GoalsProj::calc_births_hiv_exposed(const int year_index, array_double_t fem
 	boost::multi_array_ref<double, 2> arr_births(prepare_array(births, 2, shape), boost::extents[shape[0]][shape[1]]);
 	proj->calc_births_hiv_exposed(year_index, arr_females, arr_births);
 }
+
+void GoalsProj::calc_child_infections(
+	const int year_index,
+	array_double_t females,
+	array_double_t births,
+	array_double_t infections) {
+	size_t shape_inputs[] = {DP::N_AGE_BIRTH, DP::N_HIV_ADULT + 3};
+	size_t shape_output[] = {DP::N_MTCT_MOS, DP::N_MTCT_RX};
+	boost::multi_array_ref<double, 2> arr_females(prepare_array(females, 2, shape_inputs), boost::extents[shape_inputs[0]][shape_inputs[1]]);
+	boost::multi_array_ref<double, 2> arr_births(prepare_array(births, 2, shape_inputs), boost::extents[shape_inputs[0]][shape_inputs[1]]);
+	boost::multi_array_ref<double, 2> arr_infections(prepare_array(infections, 2, shape_output), boost::extents[shape_output[0]][shape_output[1]]);
+	proj->calc_child_infections(year_index, arr_females, arr_births, arr_infections);
+}

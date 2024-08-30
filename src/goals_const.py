@@ -238,10 +238,34 @@ N_ART = DTX_ART_MAX - DTX_ART_MIN + 1
 MTCT_PN = 0 # perinatal
 MTCT_BF = 1 # breastfeeding
 
+# detailed transmission timing during breastfeeding
+MTCT_MOS_00_02 =  1 # [0,2) months after delivery
+MTCT_MOS_02_04 =  2 # [2,4) months
+MTCT_MOS_04_06 =  3 # [4,6) months
+MTCT_MOS_06_08 =  4
+MTCT_MOS_08_10 =  5
+MTCT_MOS_10_12 =  6
+MTCT_MOS_12_14 =  7
+MTCT_MOS_14_16 =  8
+MTCT_MOS_16_18 =  9
+MTCT_MOS_18_20 = 10
+MTCT_MOS_20_22 = 11
+MTCT_MOS_22_24 = 12
+MTCT_MOS_24_26 = 13
+MTCT_MOS_26_28 = 14
+MTCT_MOS_28_30 = 15
+MTCT_MOS_30_32 = 16
+MTCT_MOS_32_34 = 17
+MTCT_MOS_34_36 = 18 # [34,36) months
+
 MTCT_MIN = 0
 MTCT_MAX = 1
 
+MTCT_MOS_MIN = 0
+MTCT_MOS_MAX = 18
+
 N_MTCT = MTCT_MAX - MTCT_MIN + 1
+N_MTCT_MOS = MTCT_MOS_MAX - MTCT_MOS_MIN + 1
 
 ## +-+ MTCT regimens +---------------------------------------------------------+
 MTCT_RX_SDNVP      = 0 # Single-dose nevirapine
