@@ -320,6 +320,34 @@ public:
 	/// (a=0..34) and HIV state.
 	void calc_births_hiv_exposed(const int year_index, array_double_t females, array_double_t births);
 
+	/// Calculate vertical HIV infections
+	/// @param year_index The year to calculate births in (1970 is year_index=0). This
+	/// calculation can only be done for year_index > 0.
+	/// @param females input 35-by-10 array of female population counts. See "details" below.
+	/// @param births input 35-by-10 array of births event counts. See "details" below.
+	/// @param infections output 19-by-10 array of new child infections. See "details" below.
+	/// @details
+	/// 
+	/// females[a][h] must be filled in with the number of females by age
+	/// a (a=0..34 for ages 15..49) and HIV state h.
+	/// \describe{
+	/// \item{h=0..6}{HIV+ females in stages HIV_PRIMARY..HIV_000_050 who are not on ART, or have been on ART <6 months}
+	/// \item{h=7}{HIV+ females who have been on ART at least 6 months}
+	/// \item{h=8}{HIV- females}
+	/// \item{h=9}{Newly-infected females}}
+	/// 
+	/// births[a][h] can be filled in using calc_births_hiv_exposed above
+	/// 
+	/// On return, infections[u][r] stores the number of new child infections
+	/// at time u after delivery (u=0, delivery; u=1, [0,2) months after delivery;
+	/// u=2, [2,4) months; ...; u=18, [34,36) months) and PMTCT regimen
+	/// r=MTCT_RX_DUAL..MTCT_RX_INCI.
+	void calc_child_infections(
+		const int year_index,
+		array_double_t females,
+		array_double_t births,
+		array_double_t infections);
+
 private:
 	DP::Projection* proj;
 	size_t num_years;
@@ -391,7 +419,8 @@ PYBIND11_MODULE(goals_proj, m) {
 		.def("project",    &GoalsProj::project)
 		.def("invalidate", &GoalsProj::invalidate)
 
-		.def("births_hiv_exposed", &GoalsProj::calc_births_hiv_exposed)
+		.def("births_hiv_exposed",    &GoalsProj::calc_births_hiv_exposed)
+		.def("calc_child_infections", &GoalsProj::calc_child_infections)
 
 		.def("use_direct_incidence", &GoalsProj::use_direct_incidence)
 

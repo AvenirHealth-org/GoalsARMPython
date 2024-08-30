@@ -214,6 +214,27 @@ class Model:
         self._proj.births_hiv_exposed(year - self.year_first, females, births_exposed)
         return births_exposed
     
+    def new_child_infections(self, year, females, births_exposed):
+        """! Calculate the number of children who acquire HIV during pregnancy or breastfeeding
+        @param year calculation year
+        @param females a 35-by-10 matrix of female population sizes. females[a,h]
+        stores the number of females by age (a=0..34 corresponds to ages 15..49)
+        and HIV state h. These stages are described in the "details" section.
+        @param births_exposed a 35-by-10 matrix of births to HIV+ mothers, with the same dimension as `females`
+        @return a 19-by-10 matrix of new child infections by hiv[u,r] by transmission timing u=MTCT_PN, MTCT_BF_00_02..MTCT_BF_34_36
+        and prophylaxis regimen r=MTCT_RX_SDNVP..MTCT_RX_INCI
+        @details females[a,h] stores:
+        \describe{
+        \item{h=0..6}{HIV+ females in stages HIV_PRIMARY..HIV_000_050 who are not on ART, or have been on ART <6 months}
+        \item{h=7}{HIV+ females who have been on ART at least 6 months}
+        \item{h=8}{HIV- females}
+        \item{h=9}{Newly-infected females}
+        }
+        """
+        infections = np.zeros((CONST.N_MTCT_MOS, CONST.N_MTCT_RX), dtype=self._dtype, order=self._order)
+        self._proj.calc_child_infections(year - self.year_first, females, births_exposed, infections)
+        return infections
+    
     def _initialize_population_sizes(self, med_age_debut, med_age_union, avg_dur_union, kp_size, kp_stay, kp_turnover):
         """! Convenience function for initializing model population sizes
         """
