@@ -155,6 +155,17 @@ def xlsx_load_mtct_rates(tab_mtct_rates):
     keys = [cell[0].value for cell in tab_mtct_rates['D2:D28']]
     return dict(zip(keys,vals))
 
+def xlsx_load_breastfeeding(tab_bf):
+    """! Load breastfeeding inputs
+    @param tab_bf an openpyxl workbook tab
+    @return a 81x2x18x81 array by year, ARV status (0=no, 1=yes), and months since delivery
+    (0=[0,2) months to 17=[34,36) months)
+    """
+    rval = np.zeros((CONST.XLSX_FINAL_YEAR - CONST.XLSX_FIRST_YEAR + 1, 2, CONST.N_MTCT_MOS - 1))
+    rval[:,0,:] = xlsx_load_range(tab_bf, 'B4',  'CD21').transpose()
+    rval[:,1,:] = xlsx_load_range(tab_bf, 'B23', 'CD40').transpose()
+    return rval
+
 def xlsx_load_direct_clhiv(tab_clhiv):
     return xlsx_load_range(tab_clhiv, 'D3', 'CF86').transpose()
 

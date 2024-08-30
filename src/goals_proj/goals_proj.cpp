@@ -316,6 +316,16 @@ void GoalsProj::init_mtct_rates(array_double_t mtct_rates) {
 				proj->dat.mtct_rate(u, r, h, rates[u][r][h]);
 }
 
+void GoalsProj::init_breastfeeding(array_double_t breastfeeding) {
+	size_t shape[] = {num_years, DP::N_BF_ARV, DP::N_MTCT_MOS - 1};
+	double* ptr_bf(prepare_array(breastfeeding, 3, shape));
+	boost::multi_array_ref bf(ptr_bf, boost::extents[shape[0]][shape[1]][shape[2]]);
+	for (int t(0); t < shape[0]; ++t)
+		for (int d(DP::BF_ARV_MIN); d <= DP::BF_ARV_MAX; ++d)
+			for (int a(DP::MTCT_MOS_00_02); a <= DP::MTCT_MOS_34_36; ++a)
+				proj->dat.breastfeeding(t, d, a, bf[t][d][a-1]);
+}
+
 void GoalsProj::init_transmission(
 	const double transmit_f2m,
 	const double or_m2f,
