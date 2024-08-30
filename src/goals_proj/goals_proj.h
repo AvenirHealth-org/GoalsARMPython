@@ -207,6 +207,11 @@ public:
 	/// @param mtct_rates Rates by timing (perinatal or breastfeeding), regimen, and maternal CD4 category (below 200, 200-350, 350 and above)
 	void init_mtct_rates(array_double_t mtct_rates);
 
+	/// Initialize breastfeeding patterns by prophylaxis status
+	/// @param breastfeeding an array by year, ARV status (0=off, 1=on), and
+	/// months since delivery (0=[0,2) months up to 17=[34,36) months)
+	void init_breastfeeding(array_double_t breastfeeding);
+
 	/// Initialize adult HIV progression and mortality rates off ART
 	/// @param dist HIV stage at infection by CD4 category, excluding primary infection
 	/// @param prog HIV disease progression rates by HIV stage, excluding the last, since prog=0 is implied
@@ -403,6 +408,7 @@ PYBIND11_MODULE(goals_proj, m) {
 		.def("init_epidemic_seed",            &GoalsProj::init_epidemic_seed)
 		.def("init_hiv_fertility",            &GoalsProj::init_hiv_fertility)
 		.def("init_mtct_rates",               &GoalsProj::init_mtct_rates)
+		.def("init_breastfeeding",            &GoalsProj::init_breastfeeding)
 		.def("init_transmission",             &GoalsProj::init_transmission)
 		.def("init_adult_prog_from_10yr",     &GoalsProj::init_adult_prog_from_10yr)
 		.def("init_adult_art_mort_from_10yr", &GoalsProj::init_adult_art_mort_from_10yr)

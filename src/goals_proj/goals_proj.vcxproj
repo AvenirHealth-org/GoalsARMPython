@@ -108,7 +108,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;SPECTRUM_CD4;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(LOCALAPPDATA)\Programs\Python\Python310\include;C:\Proj\Repositories\GoalsARMPython\.venv\lib\site-packages\pybind11\include;C:\Proj\Repositories\GoalsARM\include;C:\Proj\Util\boost_1_82_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
