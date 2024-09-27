@@ -164,7 +164,7 @@ def xlsx_load_breastfeeding(tab_bf):
     rval = np.zeros((CONST.XLSX_FINAL_YEAR - CONST.XLSX_FIRST_YEAR + 1, 2, CONST.N_MTCT_MOS - 1))
     rval[:,0,:] = xlsx_load_range(tab_bf, 'B4',  'CD21').transpose()
     rval[:,1,:] = xlsx_load_range(tab_bf, 'B23', 'CD40').transpose()
-    return rval
+    return 0.01 * rval
 
 def xlsx_load_direct_clhiv(tab_clhiv):
     return xlsx_load_range(tab_clhiv, 'D3', 'CF86').transpose()
