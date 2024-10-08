@@ -1,1 +1,11 @@
-/inputs/zaf-2023-inputs-sti.xlsx
+build
+.vscode
+.idea
+.mise.toml
+*.pyc
+__pycache__
+.coverage*
+/dist
+docs/_build
+.mypy_cache
+*.code-workspace

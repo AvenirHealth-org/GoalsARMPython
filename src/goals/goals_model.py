@@ -2,9 +2,9 @@ import math
 import numpy as np
 import scipy as sp
 import openpyxl as xlsx
-import src.goals_const as CONST
-import src.goals_utils as Utils
-import src.goals_proj.x64.Release.goals_proj as Goals
+import goals.goals_const as CONST
+import goals.goals_utils as Utils
+import goals_proj as Goals
 
 ## TODO:
 ## Create an Excel reader that just loads the raw inputs from Excel into member

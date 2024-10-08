@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import sys
 import time
-from src.goals_model import Model
+from goals.goals_model import Model
 
 ## Convert a numpy ndarray to a long data frame
 ## @param array a numpy ndarray
