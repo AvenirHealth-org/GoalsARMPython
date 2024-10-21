@@ -133,7 +133,7 @@ If you want to debug your a local copy of GoalsARM C++ code we need to do some m
    }
    ```
    On Linux, swap the "cppConfig" for "default (gdb) Attach".
-1. Set the path to the root of your local checkout of GoalsARM by setting the value of `GOALS_ARM_PATH` in the `pyproject.toml`?
+1. Set the path to the root of your local checkout of GoalsARM by setting the value of `GOALS_ARM_PATH` in the `pyproject.toml`
 1. Recompile the code for debugging, `hatch run compile --debug --local`. This will compile with debug symbols and link it to your local copy.
 1. You should now be able to set breakpoints, in any of the GoalsARMPython code or the GoalsARM code.
 1. To run it, open the "Run and debug" tab in VSCode, open the file you want to debug. Check the "Python C++ Debugger" is selected at the top and click the play button to start the debugger. This will launch a Python debugger and a C++ debugger and attach to it using the process ID of the Python debugger.

@@ -3,9 +3,10 @@ requires = ["scikit-build-core", "pybind11"]
 build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
-cmake.verbose = false
 cmake.build-type = "Release"
+build.verbose = false
 logging.level = "INFO"
+build-dir = "build/{wheel_tag}"
 
 [[tool.scikit-build.overrides]]
 if.env.DEBUG_BUILD = true
@@ -16,7 +17,7 @@ install.strip = false
 # The Git tag to install, can be a branch name e.g. main or a hash e.g. 8df1c0c
 GOALS_ARM_GIT_TAG = "scikit-build"
 # If compiling against local GoalsARM, the full path to your local sources
-GOALS_ARM_PATH = "/home/rob/projects/avenir/GoalsARM"
+GOALS_ARM_PATH = "C:/Users/rob/Documents/GoalsARM"
 
 [project]
 name = "goals"
@@ -66,9 +67,7 @@ dependencies = [
 ]
 
 [tool.hatch.envs.default.scripts]
-compile = "./scripts/compile.py {args}"
-compile-debug = "DEBUG=TRUE pip install -v -e ."
-compile-local = "LOCAL=TRUE pip install -v -e ."
+compile = "python ./scripts/compile.py {args}"
 test = "pytest {args:tests}"
 compile-and-test = [
   "compile",

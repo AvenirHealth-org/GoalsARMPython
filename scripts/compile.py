@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Should be run inside a venv, run it via hatch hatch e.g. "hatch run compile --local"
 Usage:
@@ -42,7 +40,7 @@ def run_build(local, debug, force):
 
     # Replace this with your actual build command
     subprocess.check_call([
-        sys.executable, "-m", "pip", "install", "-e" "."
+        "pip", "install", "-v", "-e", "."
     ], env=env)
 
 if __name__ == "__main__":
