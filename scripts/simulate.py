@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import sys
 import time
-from src.goals_model import Model
+from goals.goals_model import Model
 
 ## Convert a numpy ndarray to a long data frame
 ## @param array a numpy ndarray
@@ -63,7 +63,7 @@ def main(xlsx_name, data_path):
 if __name__ == "__main__":
     sys.stderr.write("Process %d\n" % (os.getpid()))
     if len(sys.argv) == 1:
-        xlsx_name = "inputs\\example-inputs.xlsx"
+        xlsx_name = "inputs/example-inputs.xlsx"
         data_path = "."
         main(xlsx_name, data_path)
     elif len(sys.argv) < 3:

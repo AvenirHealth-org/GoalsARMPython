@@ -1,5 +1,5 @@
 import numpy as np
-import src.goals_const as CONST
+import goals.goals_const as CONST
 
 def xlsx_load_range(tab, cell_first, cell_final, dtype=np.float64, order="C"):
     """! Return the contents of a range in an Excel tab as a numpy array

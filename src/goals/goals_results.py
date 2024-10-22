@@ -1,6 +1,5 @@
 import numpy as np
-import src.goals_const as CONST
-import src.goals_model as Goals
+import goals.goals_const as CONST
 
 class Results:
     def __init__(self, model):
