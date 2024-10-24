@@ -17,11 +17,12 @@ pip install .
 ### Prerequisites
 
 For development, you'll need to install
+* [Boost](https://www.boost.org/users/download/) (>=1.8.2, <=1.8.5) installed. The easiest way I find to do this, on windows, is to install one of the prebuilt binaries linked from the download page.
 * [hatch](https://hatch.pypa.io/latest/) which is used to manage the project
-* [CMake](https://cmake.org/) (>3.15) for compiling the C++ code
+* [CMake](https://cmake.org/) (>=3.15) for compiling the C++ code
 * Python (>=3.8), you can use hatch to install this. You'll need development headers to compile the C++ code.
 
-Note that when you start a hatch shell for the first time the C++ code will be compiled. But you will have to run this manually to pull in any changes. The python code will be installed in development mode, so any changes you make will be picked up automatically. But any changes to the C++ code will require a manual recompilation. Down the line I'd like to detect any changes automatically.
+Note that when you start a hatch shell for the first time the C++ code will be compiled. But you will have to re-compile manually to pull in any changes. The python code will be installed in development mode, so any changes you make will be picked up automatically. But any changes to the C++ code will require a manual recompilation.
 
 We're using [scikit-build-core](https://scikit-build-core.readthedocs.io/en/stable/index.html) for compiling the C++ code. This uses CMake to compile and should manage fetching any C++ dependencies (boost, GoalsARM source) and building the Python bindings.
 
