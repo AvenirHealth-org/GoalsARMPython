@@ -1,5 +1,11 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "docopt",
+# ]
+# ///
 """
-Should be run inside a venv, run it via hatch hatch e.g. "hatch run compile --local"
+Should be run inside a venv, run it via uv e.g. "uv run compile --local"
 Usage:
   compile.py [--local] [--debug] [--force]
   compile.py (-h | --help)
@@ -23,7 +29,7 @@ def is_virtual_env():
 def run_build(local, debug, force):
     """Run the build with appropriate environment variables."""
     if not is_virtual_env() and not force:
-        print("This script should be run via hatch `hatch run compile`. Use --force to override.")
+        print("This script should be run via uv `uv run ./scripts/compile.py`. Use --force to override.")
         sys.exit(1)
 
     env = os.environ.copy()
@@ -40,7 +46,7 @@ def run_build(local, debug, force):
 
     # Replace this with your actual build command
     subprocess.check_call([
-        "pip", "install", "-v", "-e", "."
+        "uv", "sync", "-v", "--reinstall-package", "goals"
     ], env=env)
 
 if __name__ == "__main__":

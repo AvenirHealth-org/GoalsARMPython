@@ -16,7 +16,8 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 set(GOALS_ARM_PATH "Path to local GoalsARM C++ library" CACHE STRING "")
 
 ## Stop GoalsARM building tests
-option(BUILD_TESTING "" OFF)
+option(GOALS_BUILD_TESTING "Build GoalsARM tests" OFF)
+message(STATUS "Building GoalsARM tests: ${GOALS_BUILD_TESTING}")
 include(CTest)
 
 if(DEFINED ENV{LOCAL_BUILD} AND "$ENV{LOCAL_BUILD}" STREQUAL "true")

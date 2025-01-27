@@ -18,58 +18,96 @@ pip install .
 
 For development, you'll need to install
 * [Boost](https://www.boost.org/users/download/) (>=1.8.2, <=1.8.5) installed. The easiest way I find to do this, on windows, is to install one of the prebuilt binaries linked from the download page.
-* [hatch](https://hatch.pypa.io/latest/) which is used to manage the project
+* [uv](https://docs.astral.sh/uv/) which is used to manage the project
 * [CMake](https://cmake.org/) (>=3.15) for compiling the C++ code
-* Python (>=3.8), you can use hatch to install this. You'll need development headers to compile the C++ code.
+* Python (>=3.10), you can [use uv to install this](https://docs.astral.sh/uv/guides/install-python/). You'll need development headers to compile the C++ code.
 
-Note that when you start a hatch shell for the first time the C++ code will be compiled. But you will have to re-compile manually to pull in any changes. The python code will be installed in development mode, so any changes you make will be picked up automatically. But any changes to the C++ code will require a manual recompilation.
+Note that when you run a `uv` command for the first time the C++ code will be compiled. But you will have to re-compile manually to pull in any changes. The python code will be installed in development mode, so any changes you make will be picked up automatically. But any changes to the C++ code will require a manual recompilation.
 
 We're using [scikit-build-core](https://scikit-build-core.readthedocs.io/en/stable/index.html) for compiling the C++ code. This uses CMake to compile and should manage fetching any C++ dependencies (boost, GoalsARM source) and building the Python bindings.
 
 ### Create/activate the virtual environment
 
 ```console
-hatch shell
+uv sync
+source .venv/bin/activate
 ```
 
 ### Compile the C++ code
 
+Note that first time you use a `uv` command it will compile the C++ code for you, but you will need to manually recompile if you make any changes to the C++ code. You can do this by passing `--reinstall` arg to any command. For example
+
 ```console
-hatch run compile
+uv sync --reinstall
 ```
+
+or
+
+```console
+uv run --reinstall pytest
+```
+
+or just the current pacakge
+
+```console
+uv run --reinstall-package goals pytest
+```
+
+By default, the C++ code will be compiled in release mode (with optimisations) and 
+
+### Release/Debug
 
 You can pass args to compile in debug mode
 
 ```console
-hatch run compile --debug
+DEBUG_BUILD=true uv run --reinstall-package goals pytest
 ```
+
+or
+
+```console
+uv run scripts/compile.py --debug
+```
+
+### Local/GitHub
 
 or against local sources
 
 ```console
-hatch run compile --local
+LOCAL_BUILD=true uv run --reinstall-package goals pytest
 ```
 
-Note that when compiling against non-local sources, CMake will fetch the main branch of GoalsARM from GitHub. You can configure this by changing `GOALS_ARM_GIT_TAG` in `pyproject.toml`. You can also set the path to your local sources by changing `GOALS_ARM_PATH` in `pyproject.toml`. You need to use a fully qualified path for this.
+or
+
+```console
+uv run scripts/compile.py --local
+```
+
+You will need to set the path to your local sources by changing `GOALS_ARM_PATH` in `pyproject.toml`. You need to use a fully qualified path for this.
+
+Note that when compiling against non-local sources, CMake will fetch the main branch of GoalsARM from GitHub. You can configure this by changing `GOALS_ARM_GIT_TAG` in `pyproject.toml`.
+
+These can be combined e.g.
+
+```console
+uv run scripts/compile.py --debug --local
+```
 
 ### Run the tests
 
-Note that any changes to the Python code will be picked up automatically, but you will need to recompile the C++ code manually if there are any changes. You can do this with `hatch run compile` or `hatch run compile_and_test` to re-compile and run tests immediately after.
+Note that any changes to the Python code will be picked up automatically, but you will need to recompile the C++ code manually if there are any changes. You can do this with the `--reinstall` or `--reinstall-package goals` flags.
 
 ```console
-hatch run test
+uv run pytest
 ```
-
-Hatch has a built in test `hatch test` but we cannot use this here as at the moment it doesn't work well with scikit-build-core.
 
 ### Running scripts
 
-You'll need to run these from within the virtual environment.
+You'll need to run these from within the `uv`.
 
 ```console
-hatch shell
-python ./scripts/calibrate.py
-python ./scripts/simulate.py
+uv run ./scripts/calibrate.py
+uv run ./scripts/simulate.py
 ```
 
 ### Run coverage
@@ -77,7 +115,7 @@ python ./scripts/simulate.py
 Run tests analysing code coverage.
 
 ```console
-hatch run cov
+uv run pytest --cov --cov-config=pyproject.toml
 ```
 
 ## Run lint
@@ -85,7 +123,12 @@ hatch run cov
 This will use [ruff](https://docs.astral.sh/ruff/). Configure settings in `pyproject.toml`
 
 ```console
-hatch fmt
+uvx ruff check
+```
+
+To automatically format the code
+```console
+uvx ruff format
 ```
 
 ### IDE integration

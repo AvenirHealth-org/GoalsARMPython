@@ -1,11 +1,20 @@
-build
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.direnv
+
+/inputs/zaf-2023-inputs-sti.xlsx
 .vscode
 .idea
 .mise.toml
-*.pyc
-__pycache__
 .coverage*
-/dist
 docs/_build
 .mypy_cache
 *.code-workspace

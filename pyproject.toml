@@ -1,8 +1,56 @@
+[project]
+name = "goals"
+version = "0.0.1"
+description = ''
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = []
+authors = [
+  { name = "Rob Glaubius", email = "rglaubius@avenirhealth.org" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+    "numpy==1.26.4", # Pinned for compatibility with pandas
+    "scipy>=1.15.0",
+    "openpyxl>=3.1.2",
+]
+
+[project.urls]
+Documentation = "https://github.com/AvenirHealth-org/GoalsARMPython#readme"
+Issues = "https://github.com/AvenirHealth-org/GoalsARMPython/issues"
+Source = "https://github.com/AvenirHealth-org/GoalsARMPython"
+
+[dependency-groups]
+dev = [
+    "pandas>=2.1.0",
+    "plotnine>=0.13.6",
+    "pytest>=8.3.4",
+    "pytest-unordered>=0.6.1",
+    "pytest-cov>=6.0.0",
+    "importlib_resources>=6.5.2",
+    "percussion>=0.1.1",
+]
+lint = [
+    "ruff"
+]
+
+[tool.uv.sources]
+percussion = { git = "https://github.com/AvenirHealth-org/percussion", branch = "main" }
+
 [build-system]
-requires = ["scikit-build-core", "pybind11"]
+requires = ["scikit-build-core>=0.10", "pybind11"]
 build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
+minimum-version = "build-system.requires"
 cmake.build-type = "Release"
 build.verbose = false
 logging.level = "INFO"
@@ -15,75 +63,9 @@ install.strip = false
 
 [tool.scikit-build.cmake.define]
 # The Git tag to install, can be a branch name e.g. main or a hash e.g. 8df1c0c
-GOALS_ARM_GIT_TAG = "scikit-build"
+GOALS_ARM_GIT_TAG = "ci"
 # If compiling against local GoalsARM, the full path to your local sources
 GOALS_ARM_PATH = "C:/Users/rob/Documents/GoalsARM"
-
-[project]
-name = "goals"
-version = "0.0.1"
-description = ''
-readme = "README.md"
-requires-python = ">=3.8"
-keywords = []
-authors = [
-  { name = "Rob Glaubius", email = "rglaubius@avenirhealth.org" },
-]
-classifiers = [
-  "Development Status :: 4 - Beta",
-  "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
-]
-dependencies = [
-    "numpy==1.25.0",
-    "scipy==1.11.0",
-    "openpyxl==3.1.2",
-]
-
-[project.urls]
-Documentation = "https://github.com/AvenirHealth-org/GoalsARMPython#readme"
-Issues = "https://github.com/AvenirHealth-org/GoalsARMPython/issues"
-Source = "https://github.com/AvenirHealth-org/GoalsARMPython"
-
-[tool.hatch.envs.default]
-path = ".direnv"
-python = "3.10"
-version = "dev"
-dependencies = [
-    "docopt",
-    "pandas",
-    "plotnine",
-    "pytest",
-    "pytest-unordered",
-    "pytest-cov",
-    "importlib_resources",
-    "percussion @ git+https://github.com/AvenirHealth-org/percussion.git@main",
-]
-
-[tool.hatch.envs.default.scripts]
-compile = "python ./scripts/compile.py {args}"
-test = "pytest {args:tests}"
-compile-and-test = [
-  "compile",
-  "test",
-]
-test-cov = "pytest --cov --cov-report= --cov-config=pyproject.toml {args:tests}"
-cov-report = "coverage report --show-missing"
-cov = [
-  "test-cov",
-  "cov-report",
-]
-cov-report-xml = "coverage xml"
-cov-ci = [
-  "test-cov",
-  "cov-report-xml",
-]
 
 [tool.pytest.ini_options]
 addopts = [
