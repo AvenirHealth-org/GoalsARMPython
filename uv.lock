@@ -325,7 +325,7 @@ dev = [
     { name = "pytest-cov", specifier = ">=6.0.0" },
     { name = "pytest-unordered", specifier = ">=0.6.1" },
 ]
-lint = [{ name = "ruff" }]
+lint = [{ name = "ruff", specifier = ">=0.9.3" }]
 
 [[package]]
 name = "importlib-resources"

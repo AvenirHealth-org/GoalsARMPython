@@ -39,7 +39,7 @@ dev = [
     "percussion>=0.1.1",
 ]
 lint = [
-    "ruff"
+    "ruff>=0.9.3"
 ]
 
 [tool.uv.sources]
@@ -65,7 +65,7 @@ install.strip = false
 # The Git tag to install, can be a branch name e.g. main or a hash e.g. 8df1c0c
 GOALS_ARM_GIT_TAG = "ci"
 # If compiling against local GoalsARM, the full path to your local sources
-GOALS_ARM_PATH = "C:/Users/rob/Documents/GoalsARM"
+GOALS_ARM_PATH = "C:/Users/Test/projects/GoalsARM"
 
 [tool.pytest.ini_options]
 addopts = [

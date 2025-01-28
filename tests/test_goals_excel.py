@@ -9,7 +9,6 @@ from goals.goals_model import Model
 ## Unit tests for Goals input initialization from Excel
 
 def test_external_clhiv():
-    print(os.getcwd())
     path = Path("inputs") / "test-external-clhiv.xlsx"
     goals = Model()
     goals.init_from_xlsx(path)

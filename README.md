@@ -2,14 +2,10 @@
 Python client for the Goals ARM model. Uses the model calculation engine from the GoalsARM repository.
 
 ## Installation
-Clone the repo, and install it via pipx
-```console
-pipx run build
-```
+Clone the repo, and install it via uv
 
-or via pip (ideally into a virtualenv)
 ```console
-pip install .
+uv build
 ```
 
 ## Development
@@ -53,7 +49,7 @@ or just the current pacakge
 uv run --reinstall-package goals pytest
 ```
 
-By default, the C++ code will be compiled in release mode (with optimisations) and 
+By default, the C++ code will be compiled in release mode (with optimisations) and using GoalsARM from GitHub.
 
 ### Release/Debug
 
@@ -140,10 +136,10 @@ uvx ruff format
 If you are only developing the Python code, this is fairly straightforward.
 
 1. Open the folder in VSCode
-1. Create the virtual environment with hatch, from a terminal in VSCode run `hatch shell`. This will create a virtual environment, install dependencies and compile the C++ code.
-1. Set the Python interpreter Ctrl+Shift+P "Python: Select interpreter" to the version of Python from your virtual env. It should be something like `.direnv/bin/python`
-1. You should now be able to run and debug the Python tests and code from the IDE. Changes to Python code will be picked up automatically, but note that if you want to update any of the C++ you will need to recompile. To do so run `hatch run compile` from the terminal.
-1. This will pull and install GoalsARM C++ code from GitHub. You can change the branch if you want by setting `GOALS_ARM_GIT_TAG` in `pyproject.toml` and recompiling via `hatch run compile`
+1. Create the virtual environment with `uv`, from a terminal in VSCode run `uv sync`. This will create a virtual environment `.venv`, install dependencies and compile the C++ code.
+1. Set the Python interpreter Ctrl+Shift+P "Python: Select interpreter" to the version of Python from your virtual env. It should be something like `.venv/bin/python` or `.venv\Scripts\python` on Windows.
+1. You should now be able to run and debug the Python tests and code from the IDE. Changes to Python code will be picked up automatically, but note that if you want to update any of the C++ you will need to recompile. To do so run `uv sync --reinstall` from the terminal.
+1. This will pull and install GoalsARM C++ code from GitHub. You can change the branch if you want by setting `GOALS_ARM_GIT_TAG` in `pyproject.toml` and recompiling via `uv sync --reinstall`
 
 Note that as this file contains a CMakeLists.txt your IDE might try and interpret this project as a CMake project. This will not compile as a raw CMake project, it requires scikit-build-core to compile succesfully. If you are using the CMake Tools VSCode extension, you can stop this by adding the following to your `.vscode/settings.json`.
 
@@ -159,7 +155,7 @@ Note that as this file contains a CMakeLists.txt your IDE might try and interpre
 
 If you want to debug your a local copy of GoalsARM C++ code we need to do some more setup.
 
-1. Install the [Python & C++ Debugger](https://marketplace.visualstudio.com/items?itemName=benjamin-simmonds.pythoncpp-debug) extension (optional)
+1. Install the [Python & C++ Debugger](https://marketplace.visualstudio.com/items?itemName=benjamin-simmonds.pythoncpp-debug) extension
 1. Add the GoalsARM package to this VSCode workspace "File" -> "Add folder to Workspace..."/ (note that this won't work if you open GoalsARM and add GoalsARMPython to the workspace. You must open GoalsARMPython first)
 1. Set the following configuration in your `.vscode/launch.json` on Windows
    ```
@@ -178,7 +174,7 @@ If you want to debug your a local copy of GoalsARM C++ code we need to do some m
    ```
    On Linux, swap the "cppConfig" for "default (gdb) Attach".
 1. Set the path to the root of your local checkout of GoalsARM by setting the value of `GOALS_ARM_PATH` in the `pyproject.toml`
-1. Recompile the code for debugging, `hatch run compile --debug --local`. This will compile with debug symbols and link it to your local copy.
+1. Recompile the code for debugging, `uv run scripts/compile.py --debug --local`. This will compile with debug symbols and link it to your local copy.
 1. You should now be able to set breakpoints, in any of the GoalsARMPython code or the GoalsARM code.
 1. To run it, open the "Run and debug" tab in VSCode, open the file you want to debug. Check the "Python C++ Debugger" is selected at the top and click the play button to start the debugger. This will launch a Python debugger and a C++ debugger and attach to it using the process ID of the Python debugger.
 
