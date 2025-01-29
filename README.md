@@ -24,8 +24,21 @@ We're using [scikit-build-core](https://scikit-build-core.readthedocs.io/en/stab
 
 ### Create/activate the virtual environment
 
+To create the venv
+
 ```console
 uv sync
+```
+
+Then to activate it, on Windows via command prompt or powershell
+
+```console
+.venv\Scripts\activate
+```
+
+or on Linux
+
+```console
 source .venv/bin/activate
 ```
 
@@ -137,8 +150,10 @@ If you are only developing the Python code, this is fairly straightforward.
 
 1. Open the folder in VSCode
 1. Create the virtual environment with `uv`, from a terminal in VSCode run `uv sync`. This will create a virtual environment `.venv`, install dependencies and compile the C++ code.
-1. Set the Python interpreter Ctrl+Shift+P "Python: Select interpreter" to the version of Python from your virtual env. It should be something like `.venv/bin/python` or `.venv\Scripts\python` on Windows.
-1. You should now be able to run and debug the Python tests and code from the IDE. Changes to Python code will be picked up automatically, but note that if you want to update any of the C++ you will need to recompile. To do so run `uv sync --reinstall` from the terminal.
+1. You now need to point VSCode to the Python interpreter managed by `uv`, there are two ways
+   * Open the command palette (Ctrl+Shift+P) and run "Python: Select Interpreter" to the version of Python from your virtual env. It should be something like `.venv/bin/python` or `.venv\Scripts\python` on Windows. You may need to restart VSCode after creating the venv in step 2.
+   * or, open the command palette (Ctrl+Shift+P) and run "Python: Create Environment", select "Venv" type, then select "GoalsARMPython". Note that this should be the existing venv, you should not recreate the environment afresh.
+1. You should now be able to run and debug the Python tests and code from the IDE. Changes to Python code will be picked up automatically, but note that if you want to update any of the C++ you will need to recompile. To do so run `uv sync --reinstall` or `uv sync --reinstall-package goals` from the terminal.
 1. This will pull and install GoalsARM C++ code from GitHub. You can change the branch if you want by setting `GOALS_ARM_GIT_TAG` in `pyproject.toml` and recompiling via `uv sync --reinstall`
 
 Note that as this file contains a CMakeLists.txt your IDE might try and interpret this project as a CMake project. This will not compile as a raw CMake project, it requires scikit-build-core to compile succesfully. If you are using the CMake Tools VSCode extension, you can stop this by adding the following to your `.vscode/settings.json`.
@@ -157,7 +172,8 @@ If you want to debug your a local copy of GoalsARM C++ code we need to do some m
 
 1. Install the [Python & C++ Debugger](https://marketplace.visualstudio.com/items?itemName=benjamin-simmonds.pythoncpp-debug) extension
 1. Add the GoalsARM package to this VSCode workspace "File" -> "Add folder to Workspace..."/ (note that this won't work if you open GoalsARM and add GoalsARMPython to the workspace. You must open GoalsARMPython first)
-1. Set the following configuration in your `.vscode/launch.json` on Windows
+1. If you don't already have one, create a `launch.json` by following the steps [here](Open the command palette (Ctrl+Shift+P) and run "Python: Select interpreter") 
+1. On Windows, add the following configuration to your `.vscode/launch.json`
    ```
    {
        "version": "0.2.0",
