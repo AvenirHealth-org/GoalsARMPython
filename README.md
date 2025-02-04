@@ -172,7 +172,7 @@ If you want to debug your a local copy of GoalsARM C++ code we need to do some m
 
 1. Install the [Python & C++ Debugger](https://marketplace.visualstudio.com/items?itemName=benjamin-simmonds.pythoncpp-debug) extension
 1. Add the GoalsARM package to this VSCode workspace "File" -> "Add folder to Workspace..."/ (note that this won't work if you open GoalsARM and add GoalsARMPython to the workspace. You must open GoalsARMPython first)
-1. If you don't already have one, create a `launch.json` by following the steps [here](Open the command palette (Ctrl+Shift+P) and run "Python: Select interpreter") 
+1. If you don't already have one, create a `launch.json` by following the steps [here](https://code.visualstudio.com/docs/editor/debugging#_launch-configurations) 
 1. On Windows, add the following configuration to your `.vscode/launch.json`
    ```
    {
