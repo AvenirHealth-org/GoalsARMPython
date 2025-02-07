@@ -8,9 +8,9 @@ import scipy.optimize as optimize
 import scipy.stats as stats
 import sys
 import time
-import src.goals_model as Goals
-import src.goals_const as CONST
-import src.goals_utils as Utils
+import goals.goals_model as Goals
+import goals.goals_const as CONST
+import goals.goals_utils as Utils
 from percussion import ancprev, hivprev, alldeaths
 
 ## TODO: make fill_hivprev_template, plot_fit_* members of GoalsFitter

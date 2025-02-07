@@ -1,0 +1,140 @@
+[project]
+name = "goals"
+version = "0.0.1"
+description = ''
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = []
+authors = [
+  { name = "Rob Glaubius", email = "rglaubius@avenirhealth.org" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+    "numpy==1.26.4", # Pinned for compatibility with pandas
+    "scipy>=1.15.0",
+    "openpyxl>=3.1.2",
+]
+
+[project.urls]
+Documentation = "https://github.com/AvenirHealth-org/GoalsARMPython#readme"
+Issues = "https://github.com/AvenirHealth-org/GoalsARMPython/issues"
+Source = "https://github.com/AvenirHealth-org/GoalsARMPython"
+
+[dependency-groups]
+dev = [
+    "pandas>=2.1.0",
+    "plotnine>=0.13.6",
+    "pytest>=8.3.4",
+    "pytest-unordered>=0.6.1",
+    "pytest-cov>=6.0.0",
+    "importlib_resources>=6.5.2",
+    "percussion>=0.1.1",
+]
+lint = [
+    "ruff>=0.9.3"
+]
+
+[tool.uv.sources]
+percussion = { git = "https://github.com/AvenirHealth-org/percussion", branch = "main" }
+
+[build-system]
+requires = ["scikit-build-core>=0.10", "pybind11"]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+cmake.build-type = "Release"
+build.verbose = false
+logging.level = "INFO"
+build-dir = "build/{wheel_tag}"
+
+[[tool.scikit-build.overrides]]
+if.env.DEBUG_BUILD = true
+cmake.build-type = "Debug"
+install.strip = false
+
+[tool.scikit-build.cmake.define]
+# The Git tag to install, can be a branch name e.g. main or a hash e.g. 8df1c0c
+GOALS_ARM_GIT_TAG = "main"
+# If compiling against local GoalsARM, the full path to your local sources
+GOALS_ARM_PATH = "C:/Users/Test/projects/GoalsARM"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py37"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+  "A",
+  "ARG",
+  "B",
+  "C",
+  "D",
+  "DTZ",
+  "E",
+  "EM",
+  "F",
+  "FBT",
+  "I",
+  "ICN",
+  "ISC",
+  "N",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "Q",
+  "RUF",
+  "S",
+  "T",
+  "TID",
+  "UP",
+  "W",
+  "YTT",
+]
+ignore = [
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105", "S106", "S107",
+  # Ignore complexity
+  "C901", "PLR0911", "PLR0912", "PLR0913", "PLR0915",
+  # Don't require docstrings everywhere for now
+  "D100", "D101", "D102", "D103", "D104", "D105",
+  # Ignore shadowing
+  "A001", "A002", "A003",
+  # Allow print until we find the alternative to R's cli
+  "T201",
+  # Allow use of non-cryptographic `random` module.
+  "S311"
+]
+unfixable = [
+  # Don't touch unused imports
+  "F401",
+]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
