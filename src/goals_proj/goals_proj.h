@@ -212,6 +212,25 @@ public:
 	/// months since delivery (0=[0,2) months up to 17=[34,36) months)
 	void init_breastfeeding(array_double_t breastfeeding);
 
+	/// Initialize PMTCT coverage and retention
+	/// @param pmtct_n            Numbers of HIV+ pregnant women receiving PMTCT by year and regimen
+    /// @param pmtct_p            Proportion of HIV+ pregnant women receiving PMTCT by year and regimen
+    /// @param retained_before    Proportion of HIV+ pregnant women on ART retained at delivery among those who started ART before their current pregnancy
+    /// @param retained_during    Proportion of HIV+ pregnant women on ART retained at delivery among those who started ART during their current pregnancy
+	/// @param retained_postnatal Proportion of HIV+ breastfeeding women retained on PMTCT from month-to-month by year and regimen
+	/// @details pmtct_n and pmtct_p have entries for MTCT_RX_SDNVP to MTCT_RX_ART_LATE
+	/// retained_postnatal must have four indices for the "regimen" dimension:
+	/// 1. Option A
+	/// 2. Option B,
+	/// 3. ART in months [0,12) after delivery
+	/// 4. ART in months 12+ after delivery
+	void init_pmtct(
+		array_double_t pmtct_n,
+		array_double_t pmtct_p,
+		array_double_t retained_before,
+		array_double_t retained_during,
+		array_double_t retained_postnatal);
+
 	/// Initialize adult HIV progression and mortality rates off ART
 	/// @param dist HIV stage at infection by CD4 category, excluding primary infection
 	/// @param prog HIV disease progression rates by HIV stage, excluding the last, since prog=0 is implied
@@ -409,6 +428,7 @@ PYBIND11_MODULE(goals_proj, m) {
 		.def("init_hiv_fertility",            &GoalsProj::init_hiv_fertility)
 		.def("init_mtct_rates",               &GoalsProj::init_mtct_rates)
 		.def("init_breastfeeding",            &GoalsProj::init_breastfeeding)
+		.def("init_pmtct",                    &GoalsProj::init_pmtct)
 		.def("init_transmission",             &GoalsProj::init_transmission)
 		.def("init_adult_prog_from_10yr",     &GoalsProj::init_adult_prog_from_10yr)
 		.def("init_adult_art_mort_from_10yr", &GoalsProj::init_adult_art_mort_from_10yr)

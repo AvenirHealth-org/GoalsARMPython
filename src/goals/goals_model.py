@@ -155,9 +155,15 @@ class Model:
         else:
             mtct_dict = Utils.xlsx_load_mtct_rates(wb[CONST.XLSX_TAB_MTCT_RATES])
             self.breastfeeding = Utils.xlsx_load_breastfeeding(wb[CONST.XLSX_TAB_BF])
+            self.pmtct = Utils.xlsx_load_pmtct(wb[CONST.XLSX_TAB_PMTCT])
             self.mtct_rates = self.calc_mtct_rates(mtct_dict)
             self._proj.init_mtct_rates(self.mtct_rates)
             self._proj.init_breastfeeding(self.breastfeeding[year_range,:,:])
+            self._proj.init_pmtct(self.pmtct['pmtct_n'][year_range,:],
+                                  self.pmtct['pmtct_p'][year_range,:],
+                                  self.pmtct['retained_before'][year_range],
+                                  self.pmtct['retained_during'][year_range],
+                                  self.pmtct['retained_postnatal'][year_range,:])
 
         self.hiv_frr = Utils.xlsx_load_hiv_fert(wb[CONST.XLSX_TAB_HIV_FERT])
         dist, prog, mort, art1, art2, art3 = Utils.xlsx_load_adult_prog(wb[CONST.XLSX_TAB_ADULT_PROG])

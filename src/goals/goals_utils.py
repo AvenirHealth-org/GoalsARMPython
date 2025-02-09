@@ -166,6 +166,27 @@ def xlsx_load_breastfeeding(tab_bf):
     rval[:,1,:] = xlsx_load_range(tab_bf, 'B23', 'CD40').transpose()
     return 0.01 * rval
 
+def xlsx_load_pmtct(tab_pmtct):
+    """! Load PMTCT coverage and retention inputs
+    @param tab_pmtct an openpyxl workbook tab
+    @return a dictionary storing five arrays:
+    - pmtct_n            year-by-regimen array of numbers of HIV+ pregnant women receiving PMTCT
+    - pmtct_p            year-by-regimen array of proportions of HIV+ pregnant women receiving PMTCT
+    - retained_before    array by year of retention on ART at delivery among women who started ART before current pregnancy
+    - retained_during    array by year of retention on ART at delivery among women who started ART during current pregnancy
+    - retained_postnatal year-by-regimen array of month-to-month retention on PMTCT among HIV+ breastfeeding women 
+    """
+    pmtct_n = xlsx_load_range(tab_pmtct, 'B3',  'CD9').transpose()
+    pmtct_p = xlsx_load_range(tab_pmtct, 'B11', 'CD17').transpose() * 0.01
+    retained_before = xlsx_load_range(tab_pmtct, 'B19', 'CD19') * 0.01
+    retained_during = xlsx_load_range(tab_pmtct, 'B20', 'CD20') * 0.01
+    retained_postnatal = 1.0 - xlsx_load_range(tab_pmtct, 'B22', 'CD25').transpose() * 0.01
+    return {'pmtct_n'            : pmtct_n,
+            'pmtct_p'            : pmtct_p,
+            'retained_before'    : retained_before[0],
+            'retained_during'    : retained_during[0],
+            'retained_postnatal' : retained_postnatal}
+
 def xlsx_load_direct_clhiv(tab_clhiv):
     return xlsx_load_range(tab_clhiv, 'D3', 'CF86').transpose()
 

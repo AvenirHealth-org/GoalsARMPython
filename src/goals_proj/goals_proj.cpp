@@ -326,6 +326,23 @@ void GoalsProj::init_breastfeeding(array_double_t breastfeeding) {
 				proj->dat.breastfeeding(t, d, a, bf[t][d][a-1]);
 }
 
+void GoalsProj::init_pmtct(
+	array_double_t pmtct_n,
+	array_double_t pmtct_p,
+	array_double_t retained_before,
+	array_double_t retained_during,
+	array_double_t retained_postnatal) {
+	size_t shape_years[] = {num_years};
+	size_t shape_pmtct[] = {num_years, DP::N_MTCT_ARV_RX};
+	size_t shape_retain[] = {num_years, 4};
+	DP::array2d_ref_t arr_pmtct_n(prepare_array(pmtct_n, 2, shape_pmtct), boost::extents[shape_pmtct[0]][shape_pmtct[1]]);
+	DP::array2d_ref_t arr_pmtct_p(prepare_array(pmtct_p, 2, shape_pmtct), boost::extents[shape_pmtct[0]][shape_pmtct[1]]);
+	DP::time_series_ref_t arr_retained_before(prepare_array(retained_before, 1, shape_years), boost::extents[shape_years[0]]);
+	DP::time_series_ref_t arr_retained_during(prepare_array(retained_during, 1, shape_years), boost::extents[shape_years[0]]);
+	DP::array2d_ref_t arr_retained_postnatal(prepare_array(retained_postnatal, 2, shape_retain), boost::extents[shape_retain[0]][shape_retain[1]]);
+	DP::set_pmtct(proj->dat, arr_pmtct_n, arr_pmtct_p, arr_retained_before, arr_retained_during, arr_retained_postnatal);
+}
+
 void GoalsProj::init_transmission(
 	const double transmit_f2m,
 	const double or_m2f,
