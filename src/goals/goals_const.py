@@ -296,6 +296,17 @@ MTCT_CD4_MAX = 2
 
 N_MTCT_CD4 = MTCT_CD4_MAX - MTCT_CD4_MIN + 1
 
+## +-+ Constants for pregnant women by HIV status +----------------------------+
+PREG_HIV = HIV_ADULT_MIN     # HIV+ pregnant women not on ART with primary HIV infection (use HIV_ADULT_MIN..HIV_ADULT_MAX to index HIV+ pregnant women by CD4 count)
+PREG_ART = HIV_ADULT_MAX + 1 # HIV+ pregnant women on ART
+PREG_NEG = HIV_ADULT_MAX + 2 # HIV- pregnant women
+PREG_NEW = HIV_ADULT_MAX + 3 # HIV+ pregnant women who newly acquired HIV
+
+PREG_MIN = HIV_ADULT_MIN
+PREG_MAX = PREG_NEW
+
+N_PREG = PREG_MAX - PREG_MIN + 1
+
 ## +===+ Fitting constants +===================================================+
 DIST_LOGNORMAL = 'Lognormal'
 DIST_NORMAL    = 'Normal'

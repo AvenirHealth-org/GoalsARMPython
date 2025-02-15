@@ -513,7 +513,7 @@ void GoalsProj::use_direct_incidence(const bool flag) {
 }
 
 void GoalsProj::calc_births_hiv_exposed(const int year_index, array_double_t females, array_double_t births) {
-	size_t shape[] = {DP::N_AGE_BIRTH, DP::N_HIV_ADULT + 3};
+	size_t shape[] = {DP::N_AGE_BIRTH, DP::N_PREG};
 	boost::multi_array_ref<double, 2> arr_females(prepare_array(females, 2, shape), boost::extents[shape[0]][shape[1]]);
 	boost::multi_array_ref<double, 2> arr_births(prepare_array(births, 2, shape), boost::extents[shape[0]][shape[1]]);
 	proj->calc_births_hiv_exposed(year_index, arr_females, arr_births);
@@ -524,7 +524,7 @@ void GoalsProj::calc_child_infections(
 	array_double_t females,
 	array_double_t births,
 	array_double_t infections) {
-	size_t shape_inputs[] = {DP::N_AGE_BIRTH, DP::N_HIV_ADULT + 3};
+	size_t shape_inputs[] = {DP::N_AGE_BIRTH, DP::N_PREG};
 	size_t shape_output[] = {DP::N_MTCT_MOS, DP::N_MTCT_RX};
 	boost::multi_array_ref<double, 2> arr_females(prepare_array(females, 2, shape_inputs), boost::extents[shape_inputs[0]][shape_inputs[1]]);
 	boost::multi_array_ref<double, 2> arr_births(prepare_array(births, 2, shape_inputs), boost::extents[shape_inputs[0]][shape_inputs[1]]);

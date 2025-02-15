@@ -6,13 +6,6 @@ import goals.goals_const as CONST
 import goals.goals_utils as Utils
 import goals_proj as Goals
 
-## TODO:
-## Create an Excel reader that just loads the raw inputs from Excel into member
-## variables. Then the Model here would be responsible for doing any
-## transformations on those variables before passing them to the calculation
-## engine. The C++ transfer layer and calculation engine ideally should not do
-## any input transformations.
-
 class Model:
     """! Goals model class. This is wraps an external Goals ARM core projection object
     so that calling applications should not need to care about the Python-C++ API
@@ -218,7 +211,7 @@ class Model:
         \item{h=9}{Newly-infected females}
         }
         """
-        births_exposed = np.zeros((CONST.N_AGE_BIRTH, CONST.N_HIV_ADULT + 3), dtype=self._dtype, order=self._order)
+        births_exposed = np.zeros((CONST.N_AGE_BIRTH, CONST.N_PREG), dtype=self._dtype, order=self._order)
         self._proj.births_hiv_exposed(year - self.year_first, females, births_exposed)
         return births_exposed
     
